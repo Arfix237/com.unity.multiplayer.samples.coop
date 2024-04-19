@@ -1,0 +1,30 @@
+print_slack_message:
+  name: ⚡ Print Slack Message ⚡
+  agent:
+    type: Unity::VM
+    image: package-ci/ubuntu:stable
+    flavor: b1.large
+  commands:
+    - command: |-
+        sudo apt install -y python3-pip
+        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+        sudo apt -y update
+        sudo apt -y install gh
+      timeout: 5
+      retries: 5
+    - command: pip install unity-downloader-cli --upgrade --index-url https://artifactory.prd.it.unity3d.com/artifactory/api/pypi/pypi/simple
+    - command: npm install upm-ci-utils@stable -g --registry https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/npm/upm-npm
+    - command: unity-downloader-cli -u trunk -c editor --wait --fast
+    - command: upm-ci package test -u .Editor --enable-code-coverage --code-coverage-options "generateAdditionalMetrics;generateHtmlReport;assemblyFilters:{% for assembly in code_coverage_assemblies -%}+{{ assembly }},{% endfor -%};" --extra-utr-arg=--coverage-results-path=$YAMATO_SOURCE_DIR/upm-ci~/test-results/CoverageResults
+      timeout: 5
+      retries: 5
+    - command: |-
+        echo # Print Slack Message
+        python .yamato/print_message_slack_channel.py
+  artifacts:
+    logs:
+      paths:
+        - "upm-ci~/test-results/**/*"
+  dependencies:
+    - .yamato/package-pack.yml#pack
