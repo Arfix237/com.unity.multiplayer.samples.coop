@@ -27,3 +27,9 @@ test_{{ project.name }}_{{ editor }}_{{ platform.name }}:
 {% endfor -%}
 {% endfor -%}
 {% endfor -%}
+  triggers:
+    external:
+      source: git@github.com:Unity-Technologies/com.unity.netcode.gameobjects.git
+      expression: push.branch eq "tmp/auto-bump-sample-manifest"
+      #refs_on_this_repository:
+      #- tmp/auto-bump-ngo-package
