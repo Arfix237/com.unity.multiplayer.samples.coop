@@ -17,7 +17,7 @@ pull_request_trigger:
     # Android
     - .yamato/mobile-build-and-run.yml#mobile_test_android_{{ project.name }}_{{ project.test_editors.first }}
 {% endfor -%}
-    - .yamato/print_message_slack_channel.yml
+    #- .yamato/print_message_slack_channel.yml
   triggers:
     cancel_old_ci: true
     pull_requests:
