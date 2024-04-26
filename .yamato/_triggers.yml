@@ -29,7 +29,6 @@ pull_request_trigger:
 run_ci_test_against_new_ngo_version:
   name: ⚡ Run CI test against new NGO version ⚡
   dependencies:
-    - .yamato/project-pack.yml#pack_com.unity.multiplayer.samples.coop
     - .yamato/ngo_version.yml#update_ngo
   triggers:
     external:
