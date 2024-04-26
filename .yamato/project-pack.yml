@@ -8,21 +8,8 @@ pack_{{ project.name }}:
     image: package-ci/ubuntu:stable
     flavor: b1.small
   commands:
-{% if $YAMATO_TRIGGER_TYPE == "ExternalPush" -%}
-    - command: |-
-        sudo apt-get install jq
-        sudo yum install jq
-        echo release/1.9.0 >> release.txt 
-        number_variable=$(sed -n 's/^release\/\([0-9.]*\)$/\1/p' release.txt)
-        echo $number_variable >> test1.txt
-        cat test1.txt
-        pwd
-        sed -i 's/"com\.unity\.netcode\.gameobjects": "[^"]*"/"com.unity.netcode.gameobjects": "'"$number_variable"'"/' Packages/manifest.json
-        cat Packages/manifest.json
-        sed -i 's/YAMATO_TRIGGER_BRANCH/number_variable' .yamato/ngo_version.yml
-{% endif -%}
-    - command: npm install upm-ci-utils@stable -g --registry https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/npm/upm-npm
-    - command: upm-ci project pack --project-path {{ project.path }}
+    - npm install upm-ci-utils@stable -g --registry https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/npm/upm-npm
+    - upm-ci project pack --project-path {{ project.path }}
   artifacts:
     packages:
       paths:
