@@ -14,4 +14,8 @@ pack_{{ project.name }}:
     packages:
       paths:
         - "upm-ci~/packages/**/*"
+{% if $YAMATO_TRIGGER_TYPE == "ExternalPush" %}
+  dependencies:
+    - .yamato/ngo_version.yml#update_ngo
+{% endif %}
 {% endfor -%}

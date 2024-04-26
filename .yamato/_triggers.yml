@@ -26,35 +26,21 @@ pull_request_trigger:
           - "develop"
           - "/release\/.*/"
 
-update_ngo:
-  name: ⚡ Update NGO $YAMATO_TRIGGER_BRANCH ⚡
-  agent:
-    type: Unity::VM
-    image: package-ci/ubuntu-22.04:v4
-    flavor: b1.small
-  commands:
-    - command: |-
-        sudo apt-get install jq
-        sudo yum install jq
-        echo release/1.9.0 >> release.txt 
-        number_variable=$(sed -n 's/^release\/\([0-9.]*\)$/\1/p' release.txt)
-        echo $number_variable >> test1.txt
-        cat test1.txt
-        pwd
-        sed -i 's/"com\.unity\.netcode\.gameobjects": "[^"]*"/"com.unity.netcode.gameobjects": "'"$number_variable"'"/' Packages/manifest.json
-        cat Packages/manifest.json
+run_ci_test_against_new_ngo_version:
+  name: ⚡ Run CI test against new NGO version ⚡
   dependencies:
-    - .yamato/project-standards.yml#standards_{{ projects.first.name }}
-{% for project in projects -%}
-{% for platform in test_platforms -%}
+    - .yamato/project-pack.yml#pack_com.unity.multiplayer.samples.coop
+    #- .yamato/project-standards.yml#standards_{{ projects.first.name }}
+#{% for project in projects -%}
+#{% for platform in test_platforms -%}
     # desktop platforms
-    - .yamato/project-tests.yml#test_{{ project.name }}_{{ project.test_editors.first }}_{{ platform.name }}
-{% endfor -%}
+    #- .yamato/project-tests.yml#test_{{ project.name }}_{{ project.test_editors.first }}_{{ platform.name }}
+#{% endfor -%}
     # iOS
-    - .yamato/mobile-build-and-run.yml#mobile_test_ios_{{ project.name }}_{{ project.test_editors.first }}
+    #- .yamato/mobile-build-and-run.yml#mobile_test_ios_{{ project.name }}_{{ project.test_editors.first }}
     # Android
-    - .yamato/mobile-build-and-run.yml#mobile_test_android_{{ project.name }}_{{ project.test_editors.first }}
-{% endfor -%}
+    #- .yamato/mobile-build-and-run.yml#mobile_test_android_{{ project.name }}_{{ project.test_editors.first }}
+#{% endfor -%}
   triggers:
     external:
       source: git@github.com:Unity-Technologies/com.unity.netcode.gameobjects.git
