@@ -17,7 +17,6 @@ pull_request_trigger:
     # Android
     - .yamato/mobile-build-and-run.yml#mobile_test_android_{{ project.name }}_{{ project.test_editors.first }}
 {% endfor -%}
-    #- .yamato/print_message_slack_channel.yml
   triggers:
     cancel_old_ci: true
     pull_requests:
@@ -26,9 +25,36 @@ pull_request_trigger:
           - "main"
           - "develop"
           - "/release\/.*/"
+
+update_ngo:
+  name: ⚡ Update NGO $YAMATO_TRIGGER_BRANCH ⚡
+  agent:
+    type: Unity::VM
+    image: package-ci/ubuntu-22.04:v4
+    flavor: b1.small
+  commands:
+    - sudo apt-get install jq
+    - sudo yum install jq
+    - echo release/1.9.0 >> release.txt 
+    - number_variable=$(sed -n 's/^release\/\([0-9.]*\)$/\1/p' release.txt)
+    - echo $number_variable >> test1.txt
+    - pwd
+    - sed -i 's/"com\.unity\.netcode\.gameobjects": "[^"]*"/"com.unity.netcode.gameobjects": "'"$number_variable"'"/' Packages/manifest.json
+  dependencies:
+    - .yamato/project-standards.yml#standards_{{ projects.first.name }}
+{% for project in projects -%}
+{% for platform in test_platforms -%}
+    # desktop platforms
+    - .yamato/project-tests.yml#test_{{ project.name }}_{{ project.test_editors.first }}_{{ platform.name }}
+{% endfor -%}
+    # iOS
+    - .yamato/mobile-build-and-run.yml#mobile_test_ios_{{ project.name }}_{{ project.test_editors.first }}
+    # Android
+    - .yamato/mobile-build-and-run.yml#mobile_test_android_{{ project.name }}_{{ project.test_editors.first }}
+{% endfor -%}
+  triggers:
     external:
       source: git@github.com:Unity-Technologies/com.unity.netcode.gameobjects.git
-      #expression: push.branch eq "tmp/auto-bump-sample-manifest"
       expression: push.branch match "tmp/*"
       refs_on_this_repository:
         - tmp/auto-bump-ngo-package
