@@ -35,7 +35,7 @@ projects:
 os_variables:
   # Unix (macOS and Ubuntu)
   unix:
-    yamato_trigger_branch: ${YAMATO_TRIGGER_BRANCH}
+    yamato_trigger_branch: ${GIT_REVISION}
   # Windows specific
   win:
-    yamato_trigger_branch: "%YAMATO_TRIGGER_BRANCH%"
+    yamato_trigger_branch: "%GIT_REVISION%"
