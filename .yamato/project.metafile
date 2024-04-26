@@ -31,3 +31,4 @@ projects:
         path: Packages/com.unity.multiplayer.samples.coop
     test_editors:
       - 2022.3
+	test: $YAMATO_TRIGGER_BRANCH

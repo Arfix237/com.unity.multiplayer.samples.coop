@@ -1,5 +1,8 @@
+{% metadata_file .yamato/project.metafile %}
+---
+{% for project in projects -%}
 update_ngo:
-  name: ⚡ Update NGO $YAMATO_TRIGGER_BRANCH ⚡
+  name: ⚡ Update NGO {{ project.test }} ⚡
   agent:
     type: Unity::VM
     image: package-ci/ubuntu-22.04:v4
@@ -15,3 +18,4 @@ update_ngo:
         pwd
         sed -i 's/"com\.unity\.netcode\.gameobjects": "[^"]*"/"com.unity.netcode.gameobjects": "'"$number_variable"'"/' Packages/manifest.json
         cat Packages/manifest.json
+{% endfor -%}
