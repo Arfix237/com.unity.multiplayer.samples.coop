@@ -1,0 +1,17 @@
+update_ngo:
+  name: ⚡ Update NGO $YAMATO_TRIGGER_BRANCH ⚡
+  agent:
+    type: Unity::VM
+    image: package-ci/ubuntu-22.04:v4
+    flavor: b1.small
+  commands:
+    - command: |-
+        sudo apt-get install jq
+        sudo yum install jq
+        echo release/1.9.0 >> release.txt 
+        number_variable=$(sed -n 's/^release\/\([0-9.]*\)$/\1/p' release.txt)
+        echo $number_variable >> test1.txt
+        cat test1.txt
+        pwd
+        sed -i 's/"com\.unity\.netcode\.gameobjects": "[^"]*"/"com.unity.netcode.gameobjects": "'"$number_variable"'"/' Packages/manifest.json
+        cat Packages/manifest.json
