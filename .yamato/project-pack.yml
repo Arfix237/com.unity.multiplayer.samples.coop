@@ -10,10 +10,10 @@ pack_{{ project.name }}:
   commands:
     - npm install upm-ci-utils@stable -g --registry https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/npm/upm-npm
     - upm-ci project pack --project-path {{ project.path }}
-#{% if $YAMATO_TRIGGER_TYPE == "ExternalPush" -%}
+{% if "ExternalPush" == "ExternalPush" -%}
   dependencies:
     - .yamato/ngo_version.yml#update_ngo
-#{% endif -%}
+{% endif -%}
   artifacts:
     packages:
       paths:
