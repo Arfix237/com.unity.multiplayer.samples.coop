@@ -31,4 +31,11 @@ projects:
         path: Packages/com.unity.multiplayer.samples.coop
     test_editors:
       - 2022.3
-	test: ${YAMATO_TRIGGER_BRANCH}
+
+os_variables:
+  # Unix (macOS and Ubuntu)
+  unix:
+    yamato_trigger_branch: ${YAMATO_TRIGGER_BRANCH}
+  # Windows specific
+  win:
+    yamato_trigger_branch: "%YAMATO_TRIGGER_BRANCH%"
