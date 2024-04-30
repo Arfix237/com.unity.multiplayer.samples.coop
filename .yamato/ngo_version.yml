@@ -1,8 +1,6 @@
 {% metadata_file .yamato/project.metafile %}
 ---
-{% assign os = os_variables.unix -%}
 update_ngo:
-#  name: ⚡ Update NGO {{ os.yamato_trigger_branch }} ⚡
   name: ⚡ Update NGO {{ ci[mac].yamato_trigger_branch }} ⚡
   agent:
     type: Unity::VM
