@@ -37,5 +37,6 @@ os_variables:
   unix:
     yamato_trigger_branch: $GIT_REVISION
   # Windows specific
-  win:
-    yamato_trigger_branch: "%GIT_REVISION%"
+ci:
+  mac:
+    yamato_trigger_branch: "$GIT_BRANCH"
