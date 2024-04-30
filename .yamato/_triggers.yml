@@ -45,5 +45,6 @@ run_ci_test_against_new_ngo_version:
     external:
       source: git@github.com:Unity-Technologies/com.unity.netcode.gameobjects.git
       expression: push.branch match "tmp/*"
+      cancel_old_ci: true
       refs_on_this_repository:
         - tmp/auto-bump-ngo-package
